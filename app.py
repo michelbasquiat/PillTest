@@ -7,11 +7,31 @@ app = Flask(__name__)
 
 # Function to draw wrapped text
 def draw_text_box(draw, text, position, box_width, font, line_spacing=10, fill="black"):
-    lines = textwrap.wrap(text, width=box_width // font.getsize('A')[0])
+    # Get the width of a single character
+    char_width = font.getbbox('A')[2] - font.getbbox('A')[0]
+    
+    # Ensure char_width is valid
+    if char_width <= 0:
+        raise ValueError(f"Invalid character width calculated: {char_width}")
+    
+    # Ensure box_width is valid
+    if box_width <= 0:
+        raise ValueError(f"Invalid box width provided: {box_width}")
+    
+    # Calculate the maximum characters per line
+    max_chars_per_line = box_width // char_width
+    
+    # Ensure max_chars_per_line is positive
+    if max_chars_per_line <= 0:
+        raise ValueError("Calculated maximum characters per line is invalid. Check box_width and font size.")
+    
+    # Wrap text
+    lines = textwrap.wrap(text, width=max_chars_per_line)
     x, y = position
     for line in lines:
+        line_height = font.getbbox(line)[3] - font.getbbox(line)[1]
         draw.text((x, y), line, font=font, fill=fill)
-        y += font.getsize(line)[1] + line_spacing
+        y += line_height + line_spacing
 
 # Function to generate the image
 def generate_image(template_path, output_path, text_data, font_path="arial.ttf"):
