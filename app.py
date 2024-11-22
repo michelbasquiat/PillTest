@@ -62,7 +62,7 @@ def generate():
     ]
 
     # Paths for the template and output
-    template_path = "carimbo_template.png"
+    template_path = "static/carimbo_template.png"
     output_path = "output.png"
 
     # Generate the image
