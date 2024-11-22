@@ -34,7 +34,7 @@ def draw_text_box(draw, text, position, box_width, font, line_spacing=10, fill="
         y += line_height + line_spacing
 
 # Function to generate the image
-def generate_image(template_path, output_path, text_data, font_path="arial.ttf"):
+def generate_image(template_path, output_path, text_data, font_path):
     template = Image.open(template_path)
     draw = ImageDraw.Draw(template)
     font = ImageFont.truetype(font_path, size=85)
@@ -82,14 +82,15 @@ def generate():
     ]
 
     # Paths for the template and output
-    template_path = "static/carimbo_template.png"
-    output_path = "output.png"
+    template_path = os.path.join(os.path.dirname(__file__), "static/carimbo_template.png")
+    output_path = os.path.join(os.path.dirname(__file__), "static/output.png")
+    font_path = os.path.join(os.path.dirname(__file__), "static/Arial.ttf")
 
     # Generate the image
-    generate_image(template_path, output_path, text_data)
+    generate_image(template_path, output_path, text_data, font_path)
 
     # Serve the generated image
     return send_file(output_path, mimetype='image/png')
 
 if __name__ == '__main__':
-    app.run(debug=False)
+    app.run(debug=True)
